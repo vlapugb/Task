@@ -67,7 +67,7 @@ int main()
 
   // activating simulation
 
-  Simulator::Stop(Seconds(0.5));
+  Simulator::Stop(Seconds(3));
   Simulator::Run();
   Simulator::Destroy();
 
