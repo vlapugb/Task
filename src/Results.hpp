@@ -6,15 +6,16 @@
 #include <vector>
 #include <string>
 
-// Структура Results
-struct Results 
-{
-    std::map<double, std::vector<double>> RlC_map;
-    std::vector<double> time_simulation_vector;
-
-    void PrintUsersTroughput();
+struct Data {
+    std::vector<double> time;
+    std::vector<double> vec;
 };
-// Объявление функции RlC_counting
+
+struct Results {
+    std::map<double, Data> RlC_map;
+    void PrintUsersThroughput();
+};
+
 Results* RlC_counting(const std::string &RlC_namefile);
 
 #endif // RESULTS_HPP

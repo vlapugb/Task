@@ -14,16 +14,20 @@ int main(int argc, char* argv[])
     Results* UL =  RlC_counting(ULRlC_namefile);
     Results* DL = RlC_counting(DLRlC_namefile);
 
-    if (UL != nullptr) {
+    //checking adress of pointer
+
+    if (UL != nullptr) 
+    {
         std::cout << "UL stats:" << std::endl;
-        UL->PrintUsersTroughput();
-        delete UL;  // Освобождение памяти
+        UL->PrintUsersThroughput();
+        delete UL;  // delete pointer to free space
     }
 
-    if (DL != nullptr) {
+    if (DL != nullptr) 
+    {
         std::cout << "DL stats:" << std::endl;
-        DL->PrintUsersTroughput();
-        delete DL;  // Освобождение памяти
+        DL->PrintUsersThroughput();
+        delete DL;  // delete pointer to free space
     }
     return 0;
 }

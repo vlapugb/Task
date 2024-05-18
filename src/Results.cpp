@@ -3,53 +3,73 @@
 #include <numeric>
 #include <cmath>
 #include <sstream>
-const double num = 1024;
 
-Results* RlC_counting(const std::string &RlC_namefile)
-{
-    Results* ptr = new Results;  // Инициализация указателя на Results
+const double NUM = 1024;
+
+Results* RlC_counting(const std::string &RlC_namefile) {
+
+    //initializing
+
+    Results* ptr = new Results;  
     std::fstream RlC;
     std::string line;
 
+    //checking for file availability
+
     RlC.open(RlC_namefile, std::fstream::in);
 
-    if (!RlC.is_open())
-    {
+    if (!RlC.is_open()) {
         std::cerr << "Can't open RlC file: " << RlC_namefile << std::endl;
         return nullptr;
     }
 
-    std::getline(RlC, line);
+    //skiping first row of file
 
-    while (std::getline(RlC, line))
-    {
+    std::getline(RlC, line); 
+
+    //going in columns
+
+    while (std::getline(RlC, line)) {
         std::istringstream iss(line);
-        double current_key;
-        std::string value;
-        int columnIndex = 0;
 
-        while (iss >> value)
-        {
-            if (columnIndex == 1)
-            { 
-                ptr->time_simulation_vector.push_back(std::stod(value));
-            }
-            else if (columnIndex == 3)
+        double temp_time_first;
+        double temp_time_second;
+        double val;
+        double current_key;
+        int columnIndex = 0;
+        std::string value;
+
+        while (iss >> value) {
+
+            //cheking columns for writing data in file
+
+            if (columnIndex == 0) 
+            {
+                temp_time_first = std::stod(value);
+            } 
+            else if (columnIndex == 1) 
+            {
+                temp_time_second = std::stod(value);
+            } 
+            else if (columnIndex == 3) 
             {
                 current_key = std::stod(value);
-                if (ptr->RlC_map.find(current_key) == ptr->RlC_map.end())
-                {
-                    ptr->RlC_map[current_key] = std::vector<double>();
+                if (ptr->RlC_map.find(current_key) == ptr->RlC_map.end()) {
+                    ptr->RlC_map[current_key] = Data();
                 }
-            }
-            else if (columnIndex == 9)
+            } 
+            else if (columnIndex == 9) 
             {
-                    double val = std::stod(value);
-                    ptr->RlC_map[current_key].push_back(val);
+                val = std::stod(value);
             }
-
             columnIndex++;
         }
+
+        // push to hash-map our data from files
+
+        ptr->RlC_map[current_key].time.push_back(temp_time_second-temp_time_first);
+        ptr->RlC_map[current_key].vec.push_back(val);
+
     }
 
     RlC.close();
@@ -57,21 +77,20 @@ Results* RlC_counting(const std::string &RlC_namefile)
     return ptr;
 }
 
-void Results::PrintUsersTroughput()
-{
-    double each_sum;
-    double throughput;
-    double SimulationTime = time_simulation_vector.back();
+//outputing data
 
-    for (const auto& iter : RlC_map)
-    {
+void Results::PrintUsersThroughput() {
+    for (const auto& iter : RlC_map) {
         const double& key = iter.first;
-        const std::vector<double>& values = iter.second;
+        const Data& data = iter.second;
+        double temp_sum_user = 0;
+        double throughput_user;
+        for(int i = 0; i < iter.second.time.size(); i++)
+        {
+            temp_sum_user+=iter.second.vec[i] / (iter.second.time[i] * NUM );
+            throughput_user = temp_sum_user / iter.second.vec.size();
+        }
 
-        // Вычисление суммы элементов vector<double> для текущего ключа
-        each_sum = std::accumulate(values.begin(), values.end(), 0.0);
-        throughput = SimulationTime == 0 ? 0 : each_sum / (SimulationTime * num);
-        // Вывод ключа и суммы элементов
-        std::cout << "USER ID: " << key << "\t" << "Throughput: " << throughput << " Kb/s" << std::endl;
+        std::cout << "USER ID: " << key << "\t" << "Throughput: " << throughput_user << " Kb/s" << std::endl;
     }
 }
