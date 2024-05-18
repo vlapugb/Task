@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
   // setup the position of ue's 
 
   Ptr<ListPositionAllocator> UEposition = CreateObject<ListPositionAllocator>();
-  UEposition->Add(Vector(1200.0, 0.0, 0.0));
+  UEposition->Add(Vector(5000.0, 0.0, 0.0));
   UEposition->Add(Vector(0.0, 0.0, 0.0));
 
   mobility.SetPositionAllocator(UEposition);
