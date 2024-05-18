@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     Results* UL =  RlC_counting(ULRlC_namefile);
     Results* DL = RlC_counting(DLRlC_namefile);
 
-    //checking adress of pointer
+    //checking address of pointer
 
     if (UL != nullptr) 
     {
