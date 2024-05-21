@@ -43,11 +43,7 @@ Results* RlC_counting(const std::string &RlC_namefile) {
 
             //cheking columns for writing data in file
 
-            if (columnIndex == 0) 
-            {
-                temp_time_first = std::stod(value);
-            } 
-            else if (columnIndex == 1) 
+            if (columnIndex == 1) 
             {
                 temp_time_second = std::stod(value);
             } 
@@ -67,7 +63,7 @@ Results* RlC_counting(const std::string &RlC_namefile) {
 
         // push to hash-map our data from files
 
-        ptr->RlC_map[current_key].time.push_back(temp_time_second-temp_time_first);
+        ptr->RlC_map[current_key].time.push_back(temp_time_second);
         ptr->RlC_map[current_key].vec.push_back(val);
 
     }
@@ -87,8 +83,8 @@ void Results::PrintUsersThroughput() {
         double throughput_user;
         for(int i = 0; i < iter.second.time.size(); i++)
         {
-            temp_sum_user+=iter.second.vec[i] / (iter.second.time[i] * NUM );
-            throughput_user = temp_sum_user / iter.second.vec.size();
+            temp_sum_user+=iter.second.vec[i];
+            throughput_user = temp_sum_user / (iter.second.time.back() * NUM);
         }
 
         std::cout << "USER ID: " << key << "\t" << "Throughput: " << throughput_user << " Kb/s" << std::endl;
